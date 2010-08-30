@@ -52,7 +52,7 @@ class TwitterOAuth {
   /**
    * Debug helpers
    */
-  function lastStatusCode() { return $this->http_status; }
+  function lastStatusCode() { return $this->http_code; }
   function lastAPICall() { return $this->last_api_call; }
 
   /**
@@ -80,6 +80,7 @@ class TwitterOAuth {
       $parameters['oauth_callback'] = $oauth_callback;
     } 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
+    if($request === false) return $request;
     $token = OAuthUtil::parse_parameters($request);
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
@@ -116,6 +117,7 @@ class TwitterOAuth {
       $parameters['oauth_verifier'] = $oauth_verifier;
     }
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
+    if($request === false) return false;
     $token = OAuthUtil::parse_parameters($request);
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
